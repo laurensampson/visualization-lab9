@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+        <style media="screen">
+            /* Add space between Vega-Embed links  */
+            .vega-actions a {
+              margin-right: 5px;
+            }
+          </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;color:grey; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Vega-Lite Coordinated Plot</h1>
+        <h2 style="text-align: center;color:grey; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: medium;">Author: Lauren Sampson</h2>
+        <div id="vis" style="margin-left: 10px;"></div>
+        <script>
+            var v1Spec = {
+                "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                "data": {"url": "https://raw.githubusercontent.com/bcviscourse/datasets/master/lab9-covidtracking.csv"},
+                "vconcat": [
+                    {
+                    "width":600,
+                    "height": 200,
+                    "params": [{
+                    "name": "brush",
+                    "select": {"type": "interval"},
+                    "value": {"x": [55, 160], "y": [13, 37]}
+                    }],
+                    "mark": {"type": "point", "tooltip": {"content": "data"}},
+                    "encoding": {
+                        "x": {"field": "positive", "type": "quantitative"},
+                        "y": {"field": "death", "type": "quantitative"},
+                        "color": {
+                            "condition":{"param": "brush", "field": "dataQualityGrade", "type": "nominal"},
+                            "value":"grey"
+                    }
+                }
+                },
+                {
+                    "width":600,
+                    "height": 200,
+                    "mark":"bar",
+                    "encoding": {
+                        "x": {"field": "state", "type": "nominal"},
+                        "y": {"field": "hospitalizedCumulative", "type": "quantitative"}
+                    },
+                    "transform": [{
+                    "filter": {"param": "brush"}
+                }]
+                },
+                {
+                    "width":600,
+                    "height":200,
+                    "mark": "bar",
+                    "encoding": {
+                        "x": {"field": "state", "type": "nominal"},
+                        "y": {"field": "recovered", "type": "quantitative"}
+                },
+                    "transform": [{
+                    "filter": {"param": "brush"}
+                }]
+                }
+                ]
+            };
+            vegaEmbed('#vis',v1Spec)
+        </script>
+    </body>
+</html>
